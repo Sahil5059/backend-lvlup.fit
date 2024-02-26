@@ -13,4 +13,5 @@ app.listen(process.env.PORT, () => {
     //now move to "ErroHandler.ts" inside the "utils" folder
 
 });
-//now add the following line in the "scripts" section of "package.json" before hitting "npm run dev": ""dev": "ts-node-dev --respawn --transpile-only server.ts"". Now move to app.ts
+//now add the following line in the "scripts" section of "package.json" before hitting "npm run dev": ""dev": "ts-node-dev --respawn --transpile-only server.ts"".
+//now move to app.ts

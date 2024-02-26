@@ -2,6 +2,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { ErrorMiddleware } from "./middleware/error";
 
 //1(a).creating-server
 export const app = express();
@@ -28,3 +29,8 @@ app.all("*", (req:Request, res:Response, next:NextFunction) => {
 });
 //now you can type "http://localhost:8000/test" in your browser to see that the api is working or not. Note that "app.all" won't work currently because we have not creted our "ErrorHandler.ts" file yet. So, you will probably get an ugly error message when trying to accesss any route other than "http://localhost:8000/test"
 //now, move to ./utils/db.ts
+
+//4(c).setting-up-error-handling
+app.use(ErrorMiddleware);
+//now, we will create a middleware for handling "async" errors
+//now, move to "catchAsyncErrors.ts" in the "middleware" folder 
