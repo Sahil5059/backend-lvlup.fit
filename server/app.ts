@@ -1,10 +1,29 @@
 //imports
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-//1.exporting-express-app
+//1(a).creating-server
 export const app = express();
 //now move to "./server.ts"
 
-//3.
+//2(a).setting-up-our-api
+app.use(express.json({limit: "50mb"})); //important for cloudinary
+app.use(cookieParser());
+//now, go to the ".env" file in the and add the following line: "ORIGIN = ['http://localhost:3000']" and then come back here
+app.use(cors({
+    origin: process.env.ORIGIN,
+    credentials: true,
+}));
+app.get("/test", (req:Request, res:Response, next:NextFunction) => {
+    res.status(200).json({
+        success: true,
+        message: "API is working bro!!",
+    });
+});
+app.all("*", (req:Request, res:Response, next:NextFunction) => {
+    const err = new Error(`Route ${req.originalUrl} not found`) as any;
+    err.statuscode = 404;
+    next(err); //transferring the error to "ErrorHandler.ts"(which will be created later)
+});
+//now you can type "http://localhost:8000/test" in your browser to see that the api is working or not. Note that "app.all" won't work currently because we have not creted our "ErrorHandler.ts" file yet. So, you will probably get an ugly error message when trying to accesss any route other than "http://localhost:8000/test"
