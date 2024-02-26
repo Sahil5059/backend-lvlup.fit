@@ -19,7 +19,7 @@ app.use(cors({
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
     res.status(200).json({
         success: true,
-        message: "API is working bro!!",
+        message: "API is working!!",
     });
 });
 app.all("*", (req:Request, res:Response, next:NextFunction) => {

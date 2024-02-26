@@ -5,4 +5,5 @@ import { NextFunction, Request, Response } from "express";
 export const CatchAsyncError = (yourfunction:any) => (req:Request, res:Response, next:NextFunction) => {
     Promise.resolve(yourfunction(req, res, next)).catch(next);
 }
-//now, we will start creating "user model"
+//we will now start creating "user model"
+//now, move to "user.model.ts" in the "models" folder
