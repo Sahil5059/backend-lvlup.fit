@@ -1,6 +1,6 @@
 //imports
 import express from "express";
-import { loginUser, logoutUser, updateAccessToken } from "../controllers/user.controller";
+import { getUserInfo, loginUser, logoutUser, updateAccessToken } from "../controllers/user.controller";
 import { isAuthenticated } from "../middleware/auth";
 
 //7(e).setting-up-user-login
@@ -13,6 +13,10 @@ userRouter.get('/logout', isAuthenticated, logoutUser);
 
 //9(b).setting-up-code-to-update-access_token
 userRouter.get('/refresh', updateAccessToken);
+//now, move to "user.service.ts" inside the "services" folder
+
+//10(c).setting-up-code-to-get-user-info
+userRouter.get("/me", isAuthenticated, getUserInfo);
 //
 
 export default userRouter;

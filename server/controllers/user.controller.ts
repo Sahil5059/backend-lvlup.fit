@@ -6,6 +6,7 @@ import ErrorHandler from "../utils/ErrorHandler";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import userModel, { IUser } from "../models/user.model";
 import { accessTokenOptions, refreshTokenOptions, sendToken } from "../utils/jwt";
+import { getUserById } from "../services/user.service";
 
 //6(a).setting-up-user-registration & activation and then deleting this section of code because we no longer need it
 //now, move to user.model.ts
@@ -78,6 +79,17 @@ export const updateAccessToken = CatchAsyncError(async(req:Request, res:Response
             status: "success",
             accessToken,
         });
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message, 400));
+    }
+});
+//now, move to "user.route.ts" in the "routes" folder
+
+//10(b).setting-up-code-to-get-user-info
+export const getUserInfo = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const userId = req.user?._id;
+        getUserById(userId, res);
     } catch (error:any) {
         return next(new ErrorHandler(error.message, 400));
     }
