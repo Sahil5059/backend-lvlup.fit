@@ -10,6 +10,10 @@ export interface IUser extends Document{
     name: string;
     email: string;
     password: string;
+    avatar:{
+        public_id: string; //since we are using "cloudinary", we will have a "public_id"
+        url: string;
+    },
     comparePassword: (password:string) => Promise<boolean>;
     SignAccessToken: () => string;
     SignRefreshToken: () => string;
@@ -34,7 +38,10 @@ const userSchema:Schema<IUser> = new mongoose.Schema({
         type:String,
         minlength: [6, "Password must be at least 6 charcters"],
         select: false,
-        required: [true, "Please enter your password"],
+    },
+    avatar:{
+        public_id: String,
+        url: String,
     },
 }, {timestamps:true});
 //setting up "hashing of password"
