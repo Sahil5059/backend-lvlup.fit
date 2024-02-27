@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { ErrorMiddleware } from "./middleware/error";
+import userRouter from "./routes/user.route";
 
 //1(a).creating-server
 export const app = express();
@@ -16,12 +17,18 @@ app.use(cors({
     origin: process.env.ORIGIN,
     credentials: true,
 }));
+
+//6(c).setting-up-user-registration
+app.use("/api/v1", userRouter);
+//now, move to "user.controller.ts" in the "controllers" folder
+
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
     res.status(200).json({
         success: true,
         message: "API is working!!",
     });
 });
+//as per my knowledge, any route which lies below "app.all" will not work, so, always keep it at the end of the routes
 app.all("*", (req:Request, res:Response, next:NextFunction) => {
     const err = new Error(`Route ${req.originalUrl} not found`) as any;
     err.statuscode = 404;
