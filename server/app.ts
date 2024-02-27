@@ -20,6 +20,7 @@ app.use(cors({
 
 //7(f).setting-up-user-login
 app.use("/api/v1", userRouter);
+//now, move to "user.controller.ts"
 
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
     res.status(200).json({

@@ -39,3 +39,18 @@ export const loginUser = CatchAsyncError(async(req:Request, res:Response, next:N
     }
 });
 //now, move to "jwt.ts" in the "utils" folder
+
+//8(a).setting-up-user-logout
+export const logoutUser = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        res.cookie("access_token", "", {maxAge:1});
+        res.cookie("refresh_token", "", {maxAge:1});
+        res.status(200).json({
+            success: true,
+            message: "Logged out successfully",
+        });
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message, 400));
+    }
+});
+//now, move to "auth.ts" in the "middleware" folder
