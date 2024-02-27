@@ -18,10 +18,6 @@ app.use(cors({
     credentials: true,
 }));
 
-//6(c).setting-up-user-registration
-app.use("/api/v1", userRouter);
-//now, move to "user.controller.ts" in the "controllers" folder
-
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
     res.status(200).json({
         success: true,
