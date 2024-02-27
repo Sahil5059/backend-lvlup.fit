@@ -1,6 +1,6 @@
 //imports
 import express from "express";
-import { getUserInfo, loginUser, logoutUser, socialAuth, updateAccessToken } from "../controllers/user.controller";
+import { getUserInfo, loginUser, logoutUser, socialAuth, updateAccessToken, updateUserInfo } from "../controllers/user.controller";
 import { isAuthenticated } from "../middleware/auth";
 
 //7(e).setting-up-user-login
@@ -19,8 +19,12 @@ userRouter.get('/refresh', updateAccessToken);
 userRouter.get("/me", isAuthenticated, getUserInfo);
 //now, move to "user.contoller.ts" in the "controllers" folder
 
-//11(a).setting-up-social-auth
+//11(b).setting-up-social-auth
 userRouter.post("/social-auth", socialAuth);
+//now, move to "user.contoller.ts" in the "controllers" folder
+
+//12(b).update-user-info
+userRouter.put('/update-user-info', isAuthenticated, updateUserInfo);
 //
 
 export default userRouter;

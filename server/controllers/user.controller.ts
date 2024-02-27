@@ -118,3 +118,34 @@ export const socialAuth = CatchAsyncError(async(req:Request, res:Response, next:
     }
 });
 //now, move to "user.route.ts" in the "routes" folder
+
+//12(a).update-user-info
+interface IupdateUserInfo {
+    name?: string;
+    email?: string;
+}
+export const updateUserInfo = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const {name, email} = req.body as IupdateUserInfo;
+        const userId = req.user?._id;
+        const user = await userModel.findById(userId);
+        if(name && user){
+            user.name = name;
+        }
+        if(email && user){
+            const existingUser = await userModel.findOne({ email });
+            if(existingUser && existingUser._id !== userId){
+                return next(new ErrorHandler("Email already exists", 400));
+            }
+            user.email = email;
+        }
+        await user?.save();
+        res.status(201).json({
+            success: true,
+            user,
+        });
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message, 400));
+    }
+});
+//now, move to "user.route.ts" in the "routes" folder
