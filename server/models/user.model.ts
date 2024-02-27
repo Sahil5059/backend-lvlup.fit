@@ -11,8 +11,8 @@ export interface IUser extends Document{
     email: string;
     password: string;
     comparePassword: (password:string) => Promise<boolean>;
-    signAccessToken: () => string;
-    signRefreshToken: () => string;
+    SignAccessToken: () => string;
+    SignRefreshToken: () => string;
 }
 const userSchema:Schema<IUser> = new mongoose.Schema({
     name:{
@@ -49,6 +49,19 @@ userSchema.pre<IUser>('save', async function(next){
 userSchema.methods.comparePassword = async function(enteredPassword:string):Promise<boolean>{
     return await bcrypt.compare(enteredPassword, this.password);
 };
+
+//7(a).setting-up-user-login
+userSchema.methods.SignAccessToken = function() {
+    return jwt.sign({id: this._id}, process.env.ACCESS_TOKEN || '', {expiresIn: "5m"});
+}
+userSchema.methods.SignRefreshToken = function() {
+    return jwt.sign({id: this._id}, process.env.REFRESH_TOKEN || '', {expiresIn: "3d"});
+}
+//to create "ACCESS_TOKEN" & "REFRESH_TOKEN", go to this website: "https://www.lastpass.com/features/password-generator", genearte the respective passwords of length 50 and paste them in the ".env" file
+//watch this to understand the concept of access and refresh tokens- 2:51:30 to 2:54:30 from: "https://youtu.be/kf6yyxMck8Y?si=BZgOvCFkBfUVCD5c"
+//now, move to "user.controller.ts" in the "controllers" folder
+
+
 const userModel:Model<IUser> = mongoose.model("User", userSchema);
 export default userModel;
 //now, move to "user.controller.ts" in the "controllers" folder
