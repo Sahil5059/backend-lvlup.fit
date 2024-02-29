@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { ErrorMiddleware } from "./middleware/error";
 import userRouter from "./routes/user.route";
+import heroRouter from "./routes/hero.route";
 
 //1(a).creating-server
 export const app = express();
@@ -21,6 +22,10 @@ app.use(cors({
 //7(f).setting-up-user-login
 app.use("/api/v1", userRouter);
 //now, move to "user.controller.ts"
+
+//16(d).edit-hero-data
+app.use("/api/v1", heroRouter);
+//
 
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
     res.status(200).json({
