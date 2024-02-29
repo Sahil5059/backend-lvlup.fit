@@ -21,6 +21,7 @@ export const isAuthenticated = CatchAsyncError(async(req:Request, res:Response, 
         }
         //now, watch: 3:16:35 to 3:18:15 from: "https://youtu.be/kf6yyxMck8Y?si=FYVJGRRz2QfCgyhU" to fix error that is going to occur below
         req.user = user;
+        req.user_not_for_login = user;
         next();
     } catch (error:any) {
         return next(new ErrorHandler(error.message, 400));

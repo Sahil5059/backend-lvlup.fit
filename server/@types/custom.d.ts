@@ -5,7 +5,8 @@ import { IUser } from "../models/user.model";
 declare global{
     namespace Express{
         interface Request{
-            user?: IUser //It's marked as optional, meaning it may or may not be present in a request. If present, it will be of type "IUser", representing user information.
+            user?: IUser; //It's marked as optional, meaning it may or may not be present in a request. If present, it will be of type "IUser", representing user information.
+            user_not_for_login?: IUser; //for storing user info but not using it to automatically login
         }
     }
 }

@@ -8,6 +8,9 @@ import userModel, { IUser } from "../models/user.model";
 import { accessTokenOptions, refreshTokenOptions, sendToken } from "../utils/jwt";
 import { getUserById } from "../services/user.service";
 import cloudinary from "cloudinary";
+import ejs from "ejs";
+import path from "path";
+import sendMail from "../utils/sendMail";
 
 //6(a).setting-up-user-registration & activation and then deleting this section of code because we no longer need it
 //now, move to user.model.ts
@@ -227,3 +230,106 @@ export const updateProfilePicture = CatchAsyncError(async(req:Request, res:Respo
     }
 });
 //now, move to "server.ts"
+
+//15(a).forgot-password
+interface IActivationToken{
+    token: string;
+    activationCode: string;
+}
+export const createActivationToken = (user:any):IActivationToken => {
+    const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
+    const token = jwt.sign(
+        {
+            user,
+            activationCode,
+        },
+        process.env.ACTIVATION_SECRET as Secret, //you will get an error if you don't write "as Secret"
+        {
+        expiresIn: "5m",
+        }
+    );
+    return {token,activationCode};
+}
+interface IVerifyUserEmail{
+    email: string;
+}
+export const verifyUserEmail = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const {email} = req.body as IVerifyUserEmail;
+        const user = await userModel.findOne({email});
+        if(!user){
+            return next(new ErrorHandler("User not found", 400));
+        }
+        const activationToken = createActivationToken(user);
+        const activationCode = activationToken.activationCode;
+        const data = {
+            user: {
+                name:user.name,
+            },
+            activationCode,
+        }
+        //open the "server" folder in terminal and type: "npm i ejs nodemailer --save-dev @types/ejs --save-dev @types/nodemailer"
+        //now, create a folder named "mails" and a then create file inside it named "activation-mail.ejs", write the necessary code for the template that email and then come back here.
+        const html = await ejs.renderFile(path.join(__dirname, "../mails/activation-mail.ejs"), data);
+        //now, move to "sendMail.ts" inside the "utils" folder, code in it and then come back here
+        try {
+            await sendMail({
+                email: user.email,
+                subject: "Reset Your Password",
+                template: "activation-mail.ejs",
+                data,
+            });
+            res.status(201).json({
+                success:true,
+                activationCode: activationCode,
+                activationToken: activationToken.token,
+            });
+        } catch (error:any) {
+            return next(new ErrorHandler(error.message,400));
+        }
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message, 400));
+    }
+});
+interface IActivationRequest{
+    activation_token: string;
+    activation_code: string;
+}
+export const activateOtp = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const {activation_token, activation_code} = req.body as IActivationRequest;
+        const userData:{user:IUser; activationCode:string} = jwt.verify(activation_token, process.env.ACTIVATION_SECRET as string) as {user:IUser; activationCode:string};
+        if(userData.activationCode !== activation_code){
+            return next(new ErrorHandler('Invalid activation code', 400));
+        }
+        req.user_not_for_login = userData.user;
+        res.status(201).json({
+            success:true,
+            user: req.user_not_for_login,
+        });
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message, 400));
+    }
+});
+interface IResetPassword{
+    new_password: string;
+}
+export const resetPassword = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const {new_password} = req.body as IResetPassword;
+        if(!new_password){
+            return next(new ErrorHandler("Please enter your new password", 400));
+        }
+        const user:IUser = req.user_not_for_login as IUser;
+        user.password = new_password;
+        await user.save();
+        res.status(201).json({
+            success: true,
+            user,
+        });
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message, 400));
+    }
+});
+
+
