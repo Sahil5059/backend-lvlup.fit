@@ -93,6 +93,9 @@ export const updateAccessToken = CatchAsyncError(async(req:Request, res:Response
 export const getUserInfo = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
     try {
         const userId = req.user?._id;
+        if(userId == null){
+            return next(new ErrorHandler('Could not find user', 400));
+        }
         getUserById(userId, res);
     } catch (error:any) {
         return next(new ErrorHandler(error.message, 400));
@@ -109,6 +112,9 @@ interface ISocialAuthBody{
 export const socialAuth = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
     try {
         const {email, name, avatar} = req.body as ISocialAuthBody;
+        if(email == null){
+            return next(new ErrorHandler('Please provide an email', 400));
+        }
         const user = await userModel.findOne({email});
         if(!user){
             const newUser = await userModel.create({email, name, avatar});
@@ -131,6 +137,9 @@ interface IupdateUserInfo {
 export const updateUserInfo = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
     try {
         const {name, email} = req.body as IupdateUserInfo;
+        if(name == null && email == null){
+            return next(new ErrorHandler("Data can't be empty", 400));
+        }
         const userId = req.user?._id;
         const user = await userModel.findById(userId);
         if(name && user){
@@ -256,6 +265,9 @@ interface IVerifyUserEmail{
 export const verifyUserEmail = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
     try {
         const {email} = req.body as IVerifyUserEmail;
+        if(email == null){
+            return next(new ErrorHandler('Please enter your registered email', 400));
+        }
         const user = await userModel.findOne({email});
         if(!user){
             return next(new ErrorHandler("User not found", 400));
@@ -298,6 +310,9 @@ interface IActivationRequest{
 export const activateOtp = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
     try {
         const {activation_token, activation_code} = req.body as IActivationRequest;
+        if(activation_token == null || activation_code == null){
+            return next(new ErrorHandler("Data can't be empty", 400));
+        }
         const userData:{user:IUser; activationCode:string} = jwt.verify(activation_token, process.env.ACTIVATION_SECRET as string) as {user:IUser; activationCode:string};
         if(userData.activationCode !== activation_code){
             return next(new ErrorHandler('Invalid activation code', 400));
