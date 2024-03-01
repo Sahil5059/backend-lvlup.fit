@@ -6,6 +6,7 @@ import { ErrorMiddleware } from "./middleware/error";
 import userRouter from "./routes/user.route";
 import heroRouter from "./routes/hero.route";
 import youtubeVideoRouter from "./routes/youtubeVideo.route";
+import contactUsRouter from "./routes/contactUs.route";
 
 //1(a).creating-server
 export const app = express();
@@ -30,6 +31,10 @@ app.use("/api/v1", heroRouter);
 
 //17(c).edit-youtue-video-data
 app.use("/api/v1", youtubeVideoRouter);
+//now, move to contactUs.model.ts in the "models" folder
+
+//18(c).edit-contact-us-data
+app.use("/api/v1", contactUsRouter);
 //
 
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
