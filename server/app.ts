@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import { ErrorMiddleware } from "./middleware/error";
 import userRouter from "./routes/user.route";
 import heroRouter from "./routes/hero.route";
+import youtubeVideoRouter from "./routes/youtubeVideo.route";
 
 //1(a).creating-server
 export const app = express();
@@ -25,6 +26,10 @@ app.use("/api/v1", userRouter);
 
 //16(d).edit-hero-data
 app.use("/api/v1", heroRouter);
+//now, move to youtubeVideo.model.ts in the "models" folder
+
+//17(c).edit-youtue-video-data
+app.use("/api/v1", youtubeVideoRouter);
 //
 
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
