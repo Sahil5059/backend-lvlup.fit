@@ -9,9 +9,11 @@ interface IHero extends Document{
 const heroSchema = new Schema<IHero>({
     heading: {
         type: String,
+        required: true,
     },
     description: {
         type: String,
+        required: true,
     },
 });
 const HeroLayout = model<IHero>('Hero', heroSchema);

@@ -14,7 +14,7 @@ interface IContactUsData{
 export const editContactUs = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
     const contactUsData:any = await ContactUsLayout.find();
     const {address, email, phoneNumber} = req.body as IContactUsData;
-    if(address == null && email == null && phoneNumber == null){
+    if(address == null || email == null || phoneNumber == null){
         return next(new ErrorHandler("Data can't be empty", 400));
     }
     const data:IContactUsData = {
@@ -22,7 +22,7 @@ export const editContactUs = CatchAsyncError(async(req:Request, res:Response, ne
         email,
         phoneNumber,
     }
-    await ContactUsLayout.findByIdAndUpdate(contactUsData[0]._id, data);
+    await ContactUsLayout.findByIdAndUpdate(contactUsData[0]._id, { $set: data }, { new: true });
     res.status(200).json({
         success: true,
         message: "Contact-Us updated successfully",

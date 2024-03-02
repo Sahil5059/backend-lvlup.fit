@@ -14,7 +14,7 @@ interface IYoutubeVideoData{
 export const editYoutubeVideo = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
     const videoData:any = await YoutubeVideoLayout.find();
     const {link, heading, description} = req.body as IYoutubeVideoData;
-    if(link == null && heading == null && description == null){
+    if(link == null || heading == null || description == null){
         return next(new ErrorHandler("Data can't be empty", 400));
     }
     const data:IYoutubeVideoData = {
@@ -22,7 +22,7 @@ export const editYoutubeVideo = CatchAsyncError(async(req:Request, res:Response,
         heading,
         description,
     }
-    await YoutubeVideoLayout.findByIdAndUpdate(videoData[0]._id, data);
+    await YoutubeVideoLayout.findByIdAndUpdate(videoData[0]._id, { $set: data }, { new: true });
     res.status(200).json({
         success: true,
         message: "Video updated successfully",

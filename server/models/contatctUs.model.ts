@@ -4,13 +4,14 @@ import { Schema, model, Document } from "mongoose";
 //18(a).edit-contact-us-data
 const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //this const "emailRegexPattern" will be used to verfiy if the entered email is a valid email-pattern or not
 interface IContactUsData extends Document{
-    address: string;
-    email: string;
-    phoneNumber: number;
+    address?: string;
+    email?: string;
+    phoneNumber?: number;
 }
 const contactUsData = new Schema<IContactUsData>({
     address: {
         type: String,
+        required: true,
     },
     email: {
         type: String,
@@ -21,9 +22,11 @@ const contactUsData = new Schema<IContactUsData>({
             message:"Please enter a valid email",
         },
         unique:true,
+        required: true,
     },
     phoneNumber: {
         type: Number,
+        required: true,
     },
 });
 const ContactUsLayout = model<IContactUsData>('contactUs', contactUsData);

@@ -7,6 +7,7 @@ import userRouter from "./routes/user.route";
 import heroRouter from "./routes/hero.route";
 import youtubeVideoRouter from "./routes/youtubeVideo.route";
 import contactUsRouter from "./routes/contactUs.route";
+import pricingRouter from "./routes/pricing.route";
 
 //1(a).creating-server
 export const app = express();
@@ -23,19 +24,23 @@ app.use(cors({
 
 //7(f).setting-up-user-login
 app.use("/api/v1", userRouter);
-//now, move to "user.controller.ts"
+//now, move to "user.controller.ts" in the "controllers" folder
 
 //16(d).edit-hero-data
 app.use("/api/v1", heroRouter);
-//now, move to youtubeVideo.model.ts in the "models" folder
+//now, move to "youtubeVideo.model.ts" in the "models" folder
 
-//17(c).edit-youtue-video-data
+//17(d).edit-youtue-video-data
 app.use("/api/v1", youtubeVideoRouter);
-//now, move to contactUs.model.ts in the "models" folder
+//now, move to "contactUs.model.ts" in the "models" folder
 
-//18(c).edit-contact-us-data
+//18(d).edit-contact-us-data
 app.use("/api/v1", contactUsRouter);
-//
+//now, move to "pricing.model.ts" in the "models" folder
+
+//19(d).edit-pricing
+app.use("/api/v1", pricingRouter);
+//now, move to "transformation.model.ts" in the models folder
 
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
     res.status(200).json({
