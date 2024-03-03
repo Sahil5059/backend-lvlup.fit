@@ -8,6 +8,7 @@ import heroRouter from "./routes/hero.route";
 import youtubeVideoRouter from "./routes/youtubeVideo.route";
 import contactUsRouter from "./routes/contactUs.route";
 import pricingRouter from "./routes/pricing.route";
+import transformationRouter from "./routes/transformation.route";
 
 //1(a).creating-server
 export const app = express();
@@ -41,6 +42,10 @@ app.use("/api/v1", contactUsRouter);
 //19(d).edit-pricing
 app.use("/api/v1", pricingRouter);
 //now, move to "transformation.model.ts" in the models folder
+
+//20(d).transformation
+app.use( "/api/v1", transformationRouter );
+//now,
 
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
     res.status(200).json({

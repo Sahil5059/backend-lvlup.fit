@@ -18,7 +18,7 @@ interface IPricingPlan{
 export const editPricing = CatchAsyncError( async( req:Request, res:Response, next:NextFunction ) => {
     const pricingData = await PricingLayout.find();
     const { monthly, yearly } = req.body as IPricingPlan;
-    if( !monthly && !yearly ){
+    if( !monthly || !yearly ){
         return next(new ErrorHandler( "Insufficient Data", 400 ));
     }
     const data:IPricingPlan = {
