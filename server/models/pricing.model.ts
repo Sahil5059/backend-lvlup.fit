@@ -8,36 +8,68 @@ interface IPricingStructure extends Document{
     premium: number;
 }
 interface IPricingPlan extends Document{
-    monthly: IPricingStructure,
-    yearly: IPricingStructure,
+    monthly: {
+        originalPrice: IPricingStructure,
+        reducedPrice?: IPricingStructure,
+    },
+    yearly: {
+        originalPrice: IPricingStructure,
+        reducedPrice?: IPricingStructure,
+    },
 }
 const pricingData = new Schema<IPricingPlan>({
     monthly: {
-        basic: {
-            type: Number,
-            required: true
+        originalPrice: {
+            basic: {
+                type: Number,
+                required: true
+            },
+            special: {
+                type: Number,
+                required: true
+            },
+            premium: {
+                type: Number,
+                required: true
+            },
         },
-        special: {
-            type: Number,
-            required: true
-        },
-        premium: {
-            type: Number,
-            required: true
+        reducedPrice: {
+            basic: {
+                type: Number,
+            },
+            special: {
+                type: Number,
+            },
+            premium: {
+                type: Number,
+            },
         },
     },
     yearly: {
-        basic: {
-            type: Number,
-            required: true
+        originalPrice: {
+            basic: {
+                type: Number,
+                required: true
+            },
+            special: {
+                type: Number,
+                required: true
+            },
+            premium: {
+                type: Number,
+                required: true
+            },
         },
-        special: {
-            type: Number,
-            required: true
-        },
-        premium: {
-            type: Number,
-            required: true
+        reducedPrice: {
+            basic: {
+                type: Number,
+            },
+            special: {
+                type: Number,
+            },
+            premium: {
+                type: Number,
+            },
         },
     },
 });
