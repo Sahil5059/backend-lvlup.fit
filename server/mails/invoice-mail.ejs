@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style type="text/css">
+        body {
+                margin: 0;
+                padding: 0;
+                min-width: 100%;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                line-height: 1.5;
+                background-color: #FAFAFA;
+            }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: black;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            color: black;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: black;
+        }
+        h2{
+            color: black;
+            text-align: center;
+        }
+        h3{
+            color: black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Invoice - Level Up Fitness</h2>
+    <h3>Customer Information</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <td><%= name %></td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td><%= address %></td>
+        </tr>
+        <tr>
+            <th>Phone Number</th>
+            <td><%= phoneNumber %></td>
+        </tr>
+    </table>
+
+    <h3>Invoice Details</h3>
+    <table>
+        <tr>
+            <th>Product Name</th>
+            <th>Original Price</th>
+            <th>Quantity</th>
+            <th>Item Total Price</th>
+        </tr>
+        <!-- Iterate over each item in itemList -->
+        <% itemList.forEach(item => { %>
+            <tr>
+                <td><%= item.productName %></td>
+                <td><%= item.originalPrice %></td>
+                <td><%= item.quantity %></td>
+                <td><%= item.itemTotalPrice %></td>
+            </tr>
+        <% }); %>
+    </table>
+
+    <h3>Invoice Footer</h3>
+    <table>
+        <tr>
+            <th>Subtotal</th>
+            <td><%= subtotal %></td>
+        </tr>
+        <tr>
+            <th>Total Discount</th>
+            <td><%= totalDiscount %></td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td><%= total %></td>
+        </tr>
+    </table>
+</body>
+</html>

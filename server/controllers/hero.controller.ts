@@ -11,19 +11,23 @@ interface IHeroData{
 }
 //first, I created the data for hero and now, I have removed it from the code because we no longer need it.
 export const editHeroData = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
-    const heroData:any = await HeroLayout.find();
-    const {heading, description} = req.body as IHeroData;
-    if(heading == null || description == null){
-        return next(new ErrorHandler("Data can't be empty", 400));
+    try {
+        const heroData:any = await HeroLayout.find();
+        const { heading, description } = req.body as IHeroData;
+        if( heading == null || description == null ){
+            return next( new ErrorHandler( "Data can't be empty", 400 ));
+        }
+        const data:IHeroData = {
+            heading,
+            description,
+        }
+        await HeroLayout.findByIdAndUpdate( heroData[0]._id, { $set: data }, { new: true } );
+        res.status( 200 ).json({
+            success: true,
+            message: "Hero updated successfully",
+        });
+    } catch ( error:any ) {
+        return next( new ErrorHandler( error.message, 500 ));
     }
-    const data:IHeroData = {
-        heading,
-        description,
-    }
-    await HeroLayout.findByIdAndUpdate(heroData[0]._id, { $set: data }, { new: true });
-    res.status(200).json({
-        success: true,
-        message: "Hero updated successfully",
-    });
 });
 //now, move to hero.route.ts in the "routes" folder

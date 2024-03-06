@@ -11,21 +11,25 @@ interface IContactUsData{
     phoneNumber: number;
 }
 //first, I created the data for contactUs and now, I have removed it from the code because we no longer need it.
-export const editContactUs = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
-    const contactUsData:any = await ContactUsLayout.find();
-    const {address, email, phoneNumber} = req.body as IContactUsData;
-    if(address == null || email == null || phoneNumber == null){
-        return next(new ErrorHandler("Data can't be empty", 400));
+export const editContactUs = CatchAsyncError( async( req:Request, res:Response, next:NextFunction ) => {
+    try {
+        const contactUsData:any = await ContactUsLayout.find();
+        const { address, email, phoneNumber } = req.body as IContactUsData;
+        if( address == null || email == null || phoneNumber == null ){
+            return next(new ErrorHandler( "Data can't be empty", 400 ));
+        }
+        const data:IContactUsData = {
+            address,
+            email,
+            phoneNumber,
+        }
+        await ContactUsLayout.findByIdAndUpdate( contactUsData[0]._id, { $set: data }, { new: true });
+        res.status(200).json({
+            success: true,
+            message: "Contact-Us updated successfully",
+        });
+    } catch ( error:any ) {
+        return next( new ErrorHandler( error.message, 500 ));
     }
-    const data:IContactUsData = {
-        address,
-        email,
-        phoneNumber,
-    }
-    await ContactUsLayout.findByIdAndUpdate(contactUsData[0]._id, { $set: data }, { new: true });
-    res.status(200).json({
-        success: true,
-        message: "Contact-Us updated successfully",
-    });
 });
 //now, move to "contactUs.route.ts" inside the "routes" folder

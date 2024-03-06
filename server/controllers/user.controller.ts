@@ -28,19 +28,19 @@ export const loginUser = CatchAsyncError(async(req:Request, res:Response, next:N
         }
         const user = await userModel.findOne({email}).select("+password");
         if(!user){
-            return next(new ErrorHandler("Invalid email or password", 400));
+            return next(new ErrorHandler("Invalid email or password", 401));
         };
         const isPasswordMatch = await user.comparePassword(password);
         if(!isPasswordMatch){
-            return next(new ErrorHandler("Invalid password", 400));
+            return next(new ErrorHandler("Invalid password", 401));
         }
 
         //7(d).setting-up-user-login
         sendToken(user, 200, res);
         //now, move to "user.route.ts" in the "routes" folder
 
-    } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
+    } catch ( error:any ) {
+        return next(new ErrorHandler(error.message, 500));
     }
 });
 //now, move to "jwt.ts" in the "utils" folder
@@ -54,8 +54,8 @@ export const logoutUser = CatchAsyncError(async(req:Request, res:Response, next:
             success: true,
             message: "Logged out successfully",
         });
-    } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
+    } catch ( error:any ) {
+        return next(new ErrorHandler(error.message, 500));
     }
 });
 //now, move to "auth.ts" in the "middleware" folder
@@ -83,8 +83,8 @@ export const updateAccessToken = CatchAsyncError(async(req:Request, res:Response
             status: "success",
             accessToken,
         });
-    } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
+    } catch ( error:any ) {
+        return next(new ErrorHandler(error.message, 500));
     }
 });
 //now, move to "user.route.ts" in the "routes" folder
@@ -94,11 +94,11 @@ export const getUserInfo = CatchAsyncError(async(req:Request, res:Response, next
     try {
         const userId = req.user?._id;
         if(userId == null){
-            return next(new ErrorHandler('Could not find user', 400));
+            return next(new ErrorHandler('Could not find user', 404));
         }
         getUserById(userId, res);
-    } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
+    } catch ( error:any ) {
+        return next(new ErrorHandler(error.message, 500));
     }
 });
 //now, move to "user.route.ts" in the "routes" folder
@@ -123,8 +123,8 @@ export const socialAuth = CatchAsyncError(async(req:Request, res:Response, next:
         else{
             sendToken(user, 200, res);
         }
-    } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
+    } catch ( error:any ) {
+        return next(new ErrorHandler(error.message, 500));
     }
 });
 //now, move to "user.route.ts" in the "routes" folder
@@ -157,8 +157,8 @@ export const updateUserInfo = CatchAsyncError(async(req:Request, res:Response, n
             success: true,
             user,
         });
-    } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
+    } catch ( error:any ) {
+        return next(new ErrorHandler(error.message, 500));
     }
 });
 //now, move to "user.route.ts" in the "routes" folder
@@ -180,7 +180,7 @@ export const updatePassword = CatchAsyncError(async(req:Request, res:Response, n
         }
         const isPasswordMatch = await user?.comparePassword(oldPassword);
         if(!isPasswordMatch){
-            return next(new ErrorHandler("Invalid old password", 400));
+            return next(new ErrorHandler("Invalid old password", 401));
         }
         user.password = newPassword;
         await user.save();
@@ -188,8 +188,8 @@ export const updatePassword = CatchAsyncError(async(req:Request, res:Response, n
             success: true,
             user,
         });
-    } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
+    } catch ( error:any ) {
+        return next(new ErrorHandler(error.message, 500));
     }
 });
 //now, move to "user.route.ts" in the "routes" folder
@@ -270,7 +270,7 @@ export const verifyUserEmail = CatchAsyncError(async(req:Request, res:Response, 
         }
         const user = await userModel.findOne({email});
         if(!user){
-            return next(new ErrorHandler("User not found", 400));
+            return next(new ErrorHandler("User not found", 404));
         }
         const activationToken = createActivationToken(user);
         const activationCode = activationToken.activationCode;
@@ -300,7 +300,7 @@ export const verifyUserEmail = CatchAsyncError(async(req:Request, res:Response, 
             return next(new ErrorHandler(error.message,400));
         }
     } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
+        return next(new ErrorHandler(error.message, 500));
     }
 });
 interface IActivationRequest{
@@ -315,7 +315,7 @@ export const activateOtp = CatchAsyncError(async(req:Request, res:Response, next
         }
         const userData:{user:IUser; activationCode:string} = jwt.verify(activation_token, process.env.ACTIVATION_SECRET as string) as {user:IUser; activationCode:string};
         if(userData.activationCode !== activation_code){
-            return next(new ErrorHandler('Invalid activation code', 400));
+            return next(new ErrorHandler('Invalid activation code', 401));
         }
         req.user_not_for_login = userData.user;
         res.status(201).json({
@@ -323,7 +323,7 @@ export const activateOtp = CatchAsyncError(async(req:Request, res:Response, next
             user: req.user_not_for_login,
         });
     } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
+        return next(new ErrorHandler(error.message, 500));
     }
 });
 interface IResetPassword{
@@ -343,7 +343,7 @@ export const resetPassword = CatchAsyncError(async(req:Request, res:Response, ne
             user,
         });
     } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
+        return next(new ErrorHandler(error.message, 500));
     }
 });
 

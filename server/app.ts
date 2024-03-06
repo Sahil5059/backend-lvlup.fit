@@ -9,6 +9,8 @@ import youtubeVideoRouter from "./routes/youtubeVideo.route";
 import contactUsRouter from "./routes/contactUs.route";
 import pricingRouter from "./routes/pricing.route";
 import transformationRouter from "./routes/transformation.route";
+import salesBannerRouter from "./routes/salesBanner.route";
+import storeItemRouter from "./routes/storeItem.route";
 
 //1(a).creating-server
 export const app = express();
@@ -45,7 +47,15 @@ app.use("/api/v1", pricingRouter);
 
 //20(d).transformation
 app.use( "/api/v1", transformationRouter );
-//now,
+//now, move to "salesBanner.model.ts" in the models folder
+
+//21(d).sales-banner
+app.use("/api/v1", salesBannerRouter);
+//now, move to "storeItem.model.ts" in the "models" folder
+
+//22(d).store
+app.use("/api/v1", storeItemRouter);
+//
 
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
     res.status(200).json({
