@@ -11,7 +11,8 @@ interface IStoreItem extends Document{
     originalPrice: number;
     reducedPrice: number;
     description: Array< string >;
-    images: Array< IImage >;    
+    images: Array< IImage >;
+    category: string;    
 }
 const imageSchema = new Schema< IImage >({
     public_id: {
@@ -41,6 +42,10 @@ const storeItemSchema = new Schema< IStoreItem >({
     },
     images: {
         type: [imageSchema],
+        required: true,
+    },
+    category: {
+        type: String,
         required: true,
     },
 });

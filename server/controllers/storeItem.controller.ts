@@ -18,12 +18,13 @@ interface IStoreItem{
     originalPrice: number;
     reducedPrice?: number;
     description: Array< string >;
-    images: Array< IImage >;    
+    images: Array< IImage >;
+    category: string;    
 }
 export const createStoreItem = CatchAsyncError( async( req:Request, res:Response, next:NextFunction ) => {
     try {
-        const { title, originalPrice, reducedPrice, description, photos } = req.body as any;
-        if( title == null || originalPrice == null || description.length === 0 || photos.length === 0 ){
+        const { title, originalPrice, reducedPrice, description, photos, category } = req.body as any;
+        if( title == null || originalPrice == null || description.length === 0 || photos.length === 0 || category==null ){
             return next( new ErrorHandler( "Insufficient Data", 400 ));
         }
         const images:any[] = await Promise.all( photos.map( async( item:any, index:any ) => {
@@ -45,8 +46,9 @@ export const createStoreItem = CatchAsyncError( async( req:Request, res:Response
             reducedPrice,
             description,
             images,
+            category
         }
-        await StoreItemLayout.create(data);
+        await StoreItemLayout.create( data );
         res.status( 201 ).json({
             success: true,
             message: "Data created successfully",
@@ -62,8 +64,8 @@ export const editStoreItem = CatchAsyncError( async( req:Request, res:Response, 
         if( originalData == null ){
             return next( new ErrorHandler( "Store-item not found", 404 ));
         }
-        const { title, originalPrice, reducedPrice, description, photos } = req.body as any;
-        if( title == null || originalPrice == null || description.length === 0 || photos.length === 0 ){
+        const { title, originalPrice, reducedPrice, description, photos, category } = req.body as any;
+        if( title == null || originalPrice == null || description.length === 0 || photos.length === 0 || category == null ){
             return next( new ErrorHandler( "Insufficient Data", 400 ));
         }
         const images:any[] = await Promise.all( photos.map( async( item:any, index:any ) => {
@@ -96,6 +98,7 @@ export const editStoreItem = CatchAsyncError( async( req:Request, res:Response, 
             reducedPrice,
             description,
             images,
+            category,
         }
         const storeItemEdit = await StoreItemLayout.findByIdAndUpdate( storeItemId , { $set: data }, { new: true });
         res.status( 201 ).json({
@@ -174,5 +177,5 @@ export const sendOrderDetails = CatchAsyncError( async( req:Request, res:Respons
     } catch ( error:any ) {
         return next( new ErrorHandler( error.message, 500 ));
     }
-})
+});
 //now, move to "storeItem.route.ts" in the "routes" folder

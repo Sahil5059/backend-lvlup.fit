@@ -11,6 +11,7 @@ import pricingRouter from "./routes/pricing.route";
 import transformationRouter from "./routes/transformation.route";
 import salesBannerRouter from "./routes/salesBanner.route";
 import storeItemRouter from "./routes/storeItem.route";
+import categoryRouter from "./routes/category.route";
 
 //1(a).creating-server
 export const app = express();
@@ -55,7 +56,11 @@ app.use("/api/v1", salesBannerRouter);
 
 //22(d).store
 app.use("/api/v1", storeItemRouter);
-//
+//now, move to "categories.model.ts" in the "models" folder
+
+//23(d).categories
+app.use("/api/v1", categoryRouter);
+//backend-over
 
 app.get("/test", (req:Request, res:Response, next:NextFunction) => {
     res.status(200).json({
