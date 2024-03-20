@@ -22,7 +22,7 @@ app.use(express.json({limit: "50mb"})); //important for cloudinary
 app.use(cookieParser());
 //now, go to the ".env" file in the and add the following line: "ORIGIN = ['http://localhost:3000']" and then come back here
 app.use(cors({
-    origin: process.env.ORIGIN,
+    origin: ['http://localhost:3000'],
     credentials: true,
 }));
 

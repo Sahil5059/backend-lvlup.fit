@@ -18,14 +18,14 @@ export const accessTokenOptions:ITokenOptions = {
     maxAge: accessTokenExpire * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: 'none',
-    //secure: true, //use this only in deployment (i think so, verify it later)
+    secure: true,
 }
 export const refreshTokenOptions:ITokenOptions = {
     expires: new Date(Date.now() + refreshTokenExpire * 24 * 60 * 60 * 1000),
     maxAge: refreshTokenExpire * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: 'none',
-    //secure: true, //use this only in deployment (i think so, verify it later)
+    secure: true,
 }
 export const sendToken = (user:IUser, statusCode:number, res:Response) => {
     const accessToken = user.SignAccessToken();
