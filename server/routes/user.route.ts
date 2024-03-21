@@ -36,9 +36,9 @@ userRouter.put('/update-user-avatar', isAuthenticated(), updateProfilePicture);
 //now, move to "user.controller.ts" in the "controllers" folder
 
 //15(b).forgot-password
-userRouter.put('/forgot-password', verifyUserEmail);
-userRouter.put('/activate-code',  activateOtp);
-userRouter.put('/reset-user-password', isAuthenticated("Could not get access token"), resetPassword);
+userRouter.post('/forgot-password', verifyUserEmail);
+userRouter.post('/activate-code',  activateOtp);
+userRouter.post('/reset-user-password', resetPassword);
 //now, move to "hero.model.ts" in the "models" folder
 
 export default userRouter;

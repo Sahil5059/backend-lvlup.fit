@@ -295,6 +295,7 @@ export const verifyUserEmail = CatchAsyncError(async(req:Request, res:Response, 
                 success:true,
                 activationCode: activationCode,
                 activationToken: activationToken.token,
+                user_not_for_login: user,
             });
         } catch (error:any) {
             return next(new ErrorHandler(error.message,400));
@@ -317,10 +318,9 @@ export const activateOtp = CatchAsyncError(async(req:Request, res:Response, next
         if(userData.activationCode !== activation_code){
             return next(new ErrorHandler('Invalid activation code', 401));
         }
-        req.user_not_for_login = userData.user;
         res.status(201).json({
             success:true,
-            user: req.user_not_for_login,
+            message: "OTP activated successfully"
         });
     } catch (error:any) {
         return next(new ErrorHandler(error.message, 500));
@@ -328,19 +328,22 @@ export const activateOtp = CatchAsyncError(async(req:Request, res:Response, next
 });
 interface IResetPassword{
     new_password: string;
+    activation_token: string;
 }
-export const resetPassword = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
+export const resetPassword = CatchAsyncError( async( req:Request, res:Response, next:NextFunction ) => {
     try {
-        const {new_password} = req.body as IResetPassword;
-        if(!new_password){
-            return next(new ErrorHandler("Please enter your new password", 400));
+        const { new_password, activation_token } = req.body as IResetPassword;
+        if( !new_password || !activation_token ){
+            return next(new ErrorHandler("Insufficient data", 400));
         }
-        const user:IUser = req.user_not_for_login as IUser;
-        user.password = new_password;
-        await user.save();
+        const userData:{ user:IUser; activationCode:string } = jwt.verify( activation_token, process.env.ACTIVATION_SECRET as string ) as { user:IUser; activationCode:string };
+        const userId = userData.user._id;
+        const userInfo:any = await userModel.findById( userId ).select( "+password" );
+        userInfo.password = new_password;
+        await userInfo.save();
         res.status(201).json({
             success: true,
-            user,
+            message: "Password has been reset successfully",
         });
     } catch (error:any) {
         return next(new ErrorHandler(error.message, 500));
