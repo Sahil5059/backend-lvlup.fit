@@ -254,7 +254,7 @@ export const createActivationToken = (user:any):IActivationToken => {
         },
         process.env.ACTIVATION_SECRET as Secret, //you will get an error if you don't write "as Secret"
         {
-        expiresIn: "5m",
+        expiresIn: "1m",
         }
     );
     return {token,activationCode};
