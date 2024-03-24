@@ -103,32 +103,6 @@ export const getUserInfo = CatchAsyncError(async(req:Request, res:Response, next
 });
 //now, move to "user.route.ts" in the "routes" folder
 
-//11(a).setting-up-social-auth
-interface ISocialAuthBody{
-    email: string;
-    name: string;
-    avatar: string;
-}
-export const socialAuth = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
-    try {
-        const {email, name, avatar} = req.body as ISocialAuthBody;
-        if(email == null){
-            return next(new ErrorHandler('Please provide an email', 400));
-        }
-        const user = await userModel.findOne({email});
-        if(!user){
-            const newUser = await userModel.create({email, name, avatar});
-            sendToken(newUser, 200, res);
-        }
-        else{
-            sendToken(user, 200, res);
-        }
-    } catch ( error:any ) {
-        return next(new ErrorHandler(error.message, 500));
-    }
-});
-//now, move to "user.route.ts" in the "routes" folder
-
 //12(a).update-user-info
 interface IupdateUserInfo {
     name?: string;
