@@ -19,7 +19,7 @@ interface ITransformationData{
 export const createTransformation = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
     try {
         const { picture, title, description, name, profession } = req.body as any;
-        if( !picture || !title || !description || !name || !profession ){
+        if( picture == "" || title == "" || description == "" || name == "" || profession == "" ){
             return next( new ErrorHandler( "Insufficient data", 400 ));
         }
         const myCloud = await cloudinary.v2.uploader.upload(picture, {

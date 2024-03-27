@@ -27,8 +27,8 @@ export const editYoutubeVideo = CatchAsyncError(async(req:Request, res:Response,
     try {
         const videoData:any = await YoutubeVideoLayout.findOne({});
         const {link, heading, description} = req.body as IYoutubeVideoData;
-        if(link == null || heading == null || description == null){
-            return next(new ErrorHandler("Data can't be empty", 400));
+        if(link == "" || heading == "" || description == ""){
+            return next(new ErrorHandler("Insufficient data", 400));
         }
         const data:IYoutubeVideoData = {
             link,

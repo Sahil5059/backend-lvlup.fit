@@ -26,8 +26,8 @@ export const editHeroData = CatchAsyncError(async(req:Request, res:Response, nex
     try {
         const heroData:any = await HeroLayout.findOne({});
         const { heading, description } = req.body as IHeroData;
-        if( heading == null || description == null ){
-            return next( new ErrorHandler( "Data can't be empty", 400 ));
+        if( heading == "" || description == "" ){
+            return next( new ErrorHandler( "Insufficient data", 400 ));
         }
         const data:IHeroData = {
             heading,
