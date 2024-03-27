@@ -10,9 +10,21 @@ interface IHeroData{
     description: string;
 }
 //first, I created the data for hero and now, I have removed it from the code because we no longer need it.
+export const getHeroData = CatchAsyncError( async( req:Request, res:Response, next:NextFunction ) => {
+    try {
+        const heroData:any = await HeroLayout.findOne({});
+        res.status( 200 ).json({
+            success: true,
+            heroData,
+        });
+    } catch ( error:any ) {
+        return next( new ErrorHandler( error.message, 500 ));
+    }
+})
+
 export const editHeroData = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
     try {
-        const heroData:any = await HeroLayout.find();
+        const heroData:any = await HeroLayout.findOne({});
         const { heading, description } = req.body as IHeroData;
         if( heading == null || description == null ){
             return next( new ErrorHandler( "Data can't be empty", 400 ));
@@ -21,7 +33,7 @@ export const editHeroData = CatchAsyncError(async(req:Request, res:Response, nex
             heading,
             description,
         }
-        await HeroLayout.findByIdAndUpdate( heroData[0]._id, { $set: data }, { new: true } );
+        await HeroLayout.findByIdAndUpdate( heroData._id, { $set: data }, { new: true } );
         res.status( 200 ).json({
             success: true,
             message: "Hero updated successfully",

@@ -1,6 +1,6 @@
 //imports
 import express from "express";
-import { activateOtp, getUserInfo, loginUser, logoutUser, resetPassword, updateAccessToken, updatePassword, updateProfilePicture, updateUserInfo, verifyUserEmail } from "../controllers/user.controller";
+import { activateOtp, getUserInfo, loginUser, logoutUser, resetPassword, updateAccessToken, updatePassword, updateUserInfo, verifyUserEmail } from "../controllers/user.controller";
 import { isAuthenticated } from "../middleware/auth";
 
 //7(e).setting-up-user-login
@@ -26,10 +26,6 @@ userRouter.put('/update-user-info', isAuthenticated(), updateUserInfo);
 //13(b).update-user-password
 userRouter.put("/update-user-password", isAuthenticated(), updatePassword);
 //now, move to "user.contoller.ts" in the "controllers" folder
-
-//14(c).update-user-avatar
-userRouter.put('/update-user-avatar', isAuthenticated(), updateProfilePicture);
-//now, move to "user.controller.ts" in the "controllers" folder
 
 //15(b).forgot-password
 userRouter.post('/forgot-password', verifyUserEmail);

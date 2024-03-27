@@ -11,9 +11,21 @@ interface IYoutubeVideoData{
     description: string;
 }
 //first, I created the data for youtubeVideo and now, I have removed it from the code because we no longer need it.
+export const getYoutubeVideo = CatchAsyncError( async( req:Request, res:Response, next:NextFunction ) => {
+    try {
+        const videoData:any = await YoutubeVideoLayout.findOne({});
+        res.status( 200 ).json({
+            success: true,
+            videoData,
+        });
+    } catch ( error:any ) {
+        return next( new ErrorHandler( error.message, 500 ));
+    }
+});
+
 export const editYoutubeVideo = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
     try {
-        const videoData:any = await YoutubeVideoLayout.find();
+        const videoData:any = await YoutubeVideoLayout.findOne({});
         const {link, heading, description} = req.body as IYoutubeVideoData;
         if(link == null || heading == null || description == null){
             return next(new ErrorHandler("Data can't be empty", 400));
@@ -23,7 +35,7 @@ export const editYoutubeVideo = CatchAsyncError(async(req:Request, res:Response,
             heading,
             description,
         }
-        await YoutubeVideoLayout.findByIdAndUpdate(videoData[0]._id, { $set: data }, { new: true });
+        await YoutubeVideoLayout.findByIdAndUpdate(videoData._id, { $set: data }, { new: true });
         res.status(200).json({
             success: true,
             message: "Video updated successfully",

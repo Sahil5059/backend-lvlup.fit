@@ -168,52 +168,6 @@ export const updatePassword = CatchAsyncError(async(req:Request, res:Response, n
 });
 //now, move to "user.route.ts" in the "routes" folder
 
-//14(a).update-user-avatar
-//open the "server" folder terminal and type: "npm i cloudinary"
-interface IUpdateProfilePicture{
-    avatar: string;
-}
-export const updateProfilePicture = CatchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
-    try {
-        const {avatar} = req.body as IUpdateProfilePicture;
-        const userId = req.user?._id;
-        const user = await userModel.findById(userId);
-        if(avatar && user){
-            if(user?.avatar?.public_id){
-                await cloudinary.v2.uploader.destroy(user?.avatar?.public_id);
-                const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-                    folder: "avatars",
-                    width: 150,
-                });
-                user.avatar = {
-                    public_id: myCloud.public_id,
-                    url: myCloud.secure_url,
-                }
-            }else{
-                const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-                    folder: "avatars",
-                    width: 150,
-                });
-                user.avatar = {
-                    public_id: myCloud.public_id,
-                    url: myCloud.secure_url,
-                }
-            }
-        }
-        if(avatar == null){
-            return next(new ErrorHandler("Please give a profile picture to upload", 400));
-        }
-        await user?.save();
-        res.status(200).json({
-            success: true,
-            user
-        });
-    } catch (error:any) {
-        return next(new ErrorHandler(error.message, 400));
-    }
-});
-//now, move to "server.ts"
-
 //15(a).forgot-password
 interface IActivationToken{
     token: string;
